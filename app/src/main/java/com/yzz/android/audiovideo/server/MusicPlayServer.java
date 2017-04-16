@@ -14,6 +14,7 @@ import com.yzz.android.audiovideo.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +30,11 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
     public static final String NEXT = "next";
     public static final String LAST = "last";
     public static final String MUSIC_PATH = "music_path";
-    private static List<String> list;
+    public static final String MUSIC_LIST = "music_list";
+    public static final String PLAY_MUSIC_BY_USER = "play_music_by_user";
+    public static final String POSITION = "position";
     private static int position = 0;
+    private static List<String> list;
 
     @Override
     public void onCreate() {
@@ -38,17 +42,13 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                list = FileUtils.getAllMusic();
-            }
-        }).start();
+        list = new ArrayList<>();
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        list.addAll(intent.getExtras().getStringArrayList(MUSIC_LIST));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -105,6 +105,12 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
                 }
                 if (PAUSE.equals(action)) {
                     mediaPlayer.pause();
+                }
+                if (PLAY_MUSIC_BY_USER.equals(action)){
+                    position = intent.getIntExtra(POSITION,0);
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(list.get(position));
+                    mediaPlayer.prepare();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -21,24 +21,24 @@ public class FileUtils {
         }
     }
 
-    public static List<String> getAllMusic() {
-        List<String> list = new ArrayList<>();
-        getFile(getRoot(), list);
-        return list;
+    public static void getAllMusic(List<String> list, List<String> simpleList ) {
+        getFile(getRoot(), list,false);
+        getFile(getRoot(),simpleList,true);
     }
 
-    public static void getFile(File root, List<String> list) {
+
+    public static void getFile(File root, List<String> list,boolean isSimple) {
         if (root == null || !root.exists()) return;
         if (root.isDirectory()) {
             File[] files = root.listFiles();
             int length = files.length;
             for (int i = 0; i < length; i++) {
                 File f = files[i];
-                getFile(f, list);
+                getFile(f, list,isSimple);
             }
         } else if (root.getAbsolutePath().endsWith("mp3")) {
-            list.add(root.getAbsolutePath());
-            Log.e("music", root.getAbsolutePath());
+            if (isSimple)list.add(root.getName());
+            else list.add(root.getAbsolutePath());
         }
     }
 }

@@ -6,7 +6,10 @@
     <color name="night_black_color">#26282C</color>
     <color name="night_text_color">#ffffff</color>
 
+    <color name="line_color">#f2f2f2</color>
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
 </resources>
