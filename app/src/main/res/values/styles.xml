@@ -5,6 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/light_text_color</item>
         <item name="android:background">@color/light_read_color</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
     </style>
 
     <style name="night" parent="Theme.AppCompat.Light.NoActionBar">
