@@ -14,13 +14,13 @@
         <receiver android:name=".server.MusicPlayServer$MusicInfoReceiver"></receiver>
         <activity
             android:name=".ui.StartActivity"
-            android:launchMode="singleInstance">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.IndexActivity" />
+        <activity android:name=".ui.IndexActivity"  android:launchMode="singleTask" />
     </application>
 
 </manifest>

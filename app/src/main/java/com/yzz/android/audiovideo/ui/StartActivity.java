@@ -25,6 +25,7 @@ public class StartActivity extends AppCompatActivity {
             if (msg!=null&&msg.what==1){
                 removeMessages(1);
                 startActivity(new Intent(StartActivity.this,IndexActivity.class));
+                finish();
             }
         }
     };
@@ -35,6 +36,6 @@ public class StartActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
-        handler.sendEmptyMessageDelayed(1,3000);
+        handler.sendEmptyMessageDelayed(1,1500);
     }
 }

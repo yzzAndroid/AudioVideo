@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -129,6 +131,20 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void onDestroy() {
+        Log.e("============","==onDestroy==========");
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode==KeyEvent.KEYCODE_BACK){
+            Intent home = new Intent();
+            home.setAction(Intent.ACTION_MAIN);
+            home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            home.addCategory(Intent.CATEGORY_HOME);
+            startActivity(home);
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 }
