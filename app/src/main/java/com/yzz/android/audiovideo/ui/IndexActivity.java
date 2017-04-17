@@ -1,9 +1,11 @@
 package com.yzz.android.audiovideo.ui;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,18 +16,23 @@ import android.widget.TextView;
 
 import com.yzz.android.audiovideo.R;
 import com.yzz.android.audiovideo.adapter.LoaclMusicListAdapter;
+import com.yzz.android.audiovideo.receiver.IMusicChegeListener;
+import com.yzz.android.audiovideo.receiver.MusicChengeReceiver;
 import com.yzz.android.audiovideo.reflect.YzzAnn;
 import com.yzz.android.audiovideo.reflect.YzzAnnotation;
 import com.yzz.android.audiovideo.server.MusicPlayServer;
 import com.yzz.android.audiovideo.ui.base.BaseActivity;
+import com.yzz.android.audiovideo.ui.base.BaseApplication;
 import com.yzz.android.audiovideo.util.FileUtils;
+import com.yzz.android.audiovideo.widget.YzzCheckBox;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndexActivity extends BaseActivity implements View.OnClickListener {
-    @YzzAnnotation(id = R.id.index_music_play_cb, click = true)
-    private CheckBox player;
+public class IndexActivity extends BaseActivity implements View.OnClickListener, YzzCheckBox.SelecterListener, IMusicChegeListener {
+    @YzzAnnotation(id = R.id.index_music_play_cb)
+    private YzzCheckBox player;
     @YzzAnnotation(id = R.id.index_lv)
     private ListView musicList;
     @YzzAnnotation(id = R.id.music_name_tv)
@@ -39,6 +46,8 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener 
     private LoaclMusicListAdapter adapter;
     private Intent userIntent;
     private boolean isInitMusicComplete = false;
+    private MusicChengeReceiver musicChengeReceiver;
+    private SoftReference<IMusicChegeListener> iMusicChegeListener;
 
 
     @Override
@@ -56,6 +65,7 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener 
     public void startMusicServer() {
         intent = new Intent(this, MusicPlayServer.class);
         intent.putStringArrayListExtra(MusicPlayServer.MUSIC_LIST, (ArrayList<String>) musics);
+        intent.putStringArrayListExtra(MusicPlayServer.MuSIC_NAMES, (ArrayList<String>) musicNames);
         startService(intent);
     }
 
@@ -67,6 +77,8 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener 
         musicNames = new ArrayList<>();
         musics = new ArrayList<>();
         musicList.setAdapter(adapter);
+        adapter.setMusics(musicNames);
+        player.setSelectListener(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -77,9 +89,9 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void run() {
                         //这里是要初始化listVIew
-                        adapter.setMusics(musicNames);
                         adapter.notifyDataSetChanged();
                         initBottom();
+
                     }
                 });
             }
@@ -89,11 +101,17 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 userIntent.setAction(MusicPlayServer.PLAY_MUSIC_BY_USER);
                 userIntent.putExtra(MusicPlayServer.POSITION, position);
-                player.setChecked(true);
+                player.setSelect(true);
                 musicNameTv.setText(musicNames.get(position));
                 sendBroadcast(userIntent);
             }
         });
+
+        IntentFilter filter = new IntentFilter("music_change");
+        musicChengeReceiver = new MusicChengeReceiver();
+        iMusicChegeListener = new SoftReference<IMusicChegeListener>(this);
+        musicChengeReceiver.setMusicChangeListener(iMusicChegeListener);
+        registerReceiver(musicChengeReceiver, filter);
     }
 
     private void initBottom() {
@@ -109,42 +127,46 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (isInitMusicComplete && musics == null || musics.size() <= 0) {
-            player.setChecked(false);
-            return;
-        }
-        switch (v.getId()) {
-            case R.id.index_music_play_cb:
-                if (player.isChecked()) {
-                    getApplication().setTheme(R.style.night);
-                    setTheme(R.style.night);
-                    intentReceiver.setAction(MusicPlayServer.PLAY);
-                } else {
-                    intentReceiver.setAction(MusicPlayServer.PAUSE);
-                    getApplication().setTheme(R.style.light);
-                    setTheme(R.style.light);
-                }
-                sendBroadcast(intentReceiver);
-                break;
-        }
+
     }
 
     @Override
     protected void onDestroy() {
-        Log.e("============","==onDestroy==========");
         super.onDestroy();
+        BaseApplication.getInstance().setNeedStartActivity(true);
+        musicChengeReceiver.remove(iMusicChegeListener);
+        unregisterReceiver(musicChengeReceiver);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode==KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             Intent home = new Intent();
             home.setAction(Intent.ACTION_MAIN);
             home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             home.addCategory(Intent.CATEGORY_HOME);
             startActivity(home);
+            BaseApplication.getInstance().setNeedStartActivity(false);
             return true;
         }
         return super.onKeyUp(keyCode, event);
     }
+
+    @Override
+    public void clickListener(boolean isSelect) {
+        if (isSelect) {
+            intentReceiver.setAction(MusicPlayServer.PLAY);
+        } else {
+            intentReceiver.setAction(MusicPlayServer.PAUSE);
+        }
+        sendBroadcast(intentReceiver);
+    }
+
+    @Override
+    public void change(int position, String name, String author, long time) {
+        if (!TextUtils.isEmpty(name))
+            musicNameTv.setText(name);
+    }
+
+
 }

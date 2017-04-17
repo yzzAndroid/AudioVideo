@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yzz on 2017/3/22 0022.
@@ -18,8 +20,21 @@ public class YzzAnn<T> {
     private Class<? extends Object> aClass;
     private SoftReference<View> softReferenceView;
     private T t;
+    private static List<SoftReference> referenceList;
+
+    static {
+        referenceList = new ArrayList<>();
+    }
+
+    public static void changeColor(){
+        int size = referenceList.size();
+        for (int i = 0; i <size ; i++) {
+
+        }
+    }
 
     public YzzAnn() {
+
     }
 
     public void bind(T t) {

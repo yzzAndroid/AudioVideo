@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.yzz.android.audiovideo.receiver.MusicChengeReceiver;
 import com.yzz.android.audiovideo.util.FileUtils;
 
 import java.io.File;
@@ -33,8 +34,14 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
     public static final String MUSIC_LIST = "music_list";
     public static final String PLAY_MUSIC_BY_USER = "play_music_by_user";
     public static final String POSITION = "position";
+    public static final String NAME = "name";
+    public static final String AUTHOR = "author";
+    public static final String TIME = "time";
     private static int position = 0;
     private static List<String> list;
+    public static String MuSIC_NAMES = "music_names";
+    private Intent musicChange;
+    private List<String> musicNames;
 
     @Override
     public void onCreate() {
@@ -43,12 +50,16 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
         list = new ArrayList<>();
+        musicChange = new Intent();
+        musicChange.setAction("music_change");
+        musicNames = new ArrayList<>();
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         list.addAll(intent.getExtras().getStringArrayList(MUSIC_LIST));
+        musicNames.addAll(intent.getExtras().getStringArrayList(MuSIC_NAMES));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -73,7 +84,6 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
             mediaPlayer.reset();
             mediaPlayer.setDataSource(list.get(position));
             mediaPlayer.prepare();
-            position++;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,6 +94,11 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
     public void onPrepared(MediaPlayer mp) {
         isNeedPrepar = false;
         mediaPlayer.start();
+        musicChange.putExtra(NAME,musicNames.get(position));
+        musicChange.putExtra(NAME,musicNames.get(position));
+        musicChange.putExtra(NAME,musicNames.get(position));
+        sendBroadcast(musicChange);
+        position++;
     }
 
     public static class MusicInfoReceiver extends BroadcastReceiver {
@@ -106,8 +121,8 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
                 if (PAUSE.equals(action)) {
                     mediaPlayer.pause();
                 }
-                if (PLAY_MUSIC_BY_USER.equals(action)){
-                    position = intent.getIntExtra(POSITION,0);
+                if (PLAY_MUSIC_BY_USER.equals(action)) {
+                    position = intent.getIntExtra(POSITION, 0);
                     mediaPlayer.reset();
                     mediaPlayer.setDataSource(list.get(position));
                     mediaPlayer.prepare();

@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yzz.android.audiovideo">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/night">
-        <service android:name=".server.MusicPlayServer"></service>
-        <receiver android:name=".server.MusicPlayServer$MusicInfoReceiver"></receiver>
+        android:theme="@style/AppTheme">
+        <service android:name=".server.MusicPlayServer" />
+
+        <receiver android:name=".server.MusicPlayServer$MusicInfoReceiver" />
+        <receiver android:name=".receiver.MusicChengeReceiver">
+            <intent-filter>
+                <action android:name="music_change"></action>
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".ui.StartActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleInstance">
+
+        </activity>
+        <activity
+            android:name=".ui.IndexActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".ui.StartControalActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
-                <category android:name="android.intent.category.LAUNCHER"></category>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.IndexActivity"  android:launchMode="singleTask" />
     </application>
 
 </manifest>

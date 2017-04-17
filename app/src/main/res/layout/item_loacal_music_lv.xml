@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/light_read_color"
     android:padding="12dp"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
+        android:textColor="@color/light_text_color"
         android:layout_marginBottom="10dp"
         android:text="歌曲名称"
         android:id="@+id/item_local_music_name_tv"
@@ -15,6 +17,7 @@
         android:ellipsize="end"
         />
     <TextView
+        android:textColor="@color/light_text_color"
         android:text="作者"
         android:id="@+id/item_local_music_user_tv"
         android:layout_width="match_parent"

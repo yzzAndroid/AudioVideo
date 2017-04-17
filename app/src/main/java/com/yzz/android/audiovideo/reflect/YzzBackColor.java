@@ -1,20 +1,22 @@
 package com.yzz.android.audiovideo.reflect;
 
+import android.graphics.Color;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by yzz on 2017/3/22 0022.
+ * Created by yzz
+ * 2017/4/17 0017.
  */
 //作用域
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD})
 //生命周期
 @Retention(RetentionPolicy.RUNTIME)
-public @interface YzzAnnotation {
-    int id();
-
-    boolean click() default false;
-
+public @interface YzzBackColor {
+    int lightColor();
+    int nightColor();
 }
+

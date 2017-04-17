@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:yzz="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,107 +9,113 @@
 
     <LinearLayout
         android:id="@+id/head"
-        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:gravity="center">
 
-        <CheckBox
-            android:padding="0dp"
-            android:textSize="0dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <com.yzz.android.audiovideo.widget.YzzCheckBox
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:button="@null"
-            android:checked="true"
-            android:drawableTop="@drawable/music_drawable" />
-
-        <CheckBox
             android:padding="0dp"
-            android:textSize="0dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            yzz:select="@mipmap/icon_music"
+            yzz:unSelect="@mipmap/icon_music_black" />
+
+        <com.yzz.android.audiovideo.widget.YzzCheckBox
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/video_drawable" />
+            yzz:select="@mipmap/icon_video"
+            yzz:unSelect="@mipmap/icon_video_black"
+
+            />
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_below="@+id/head"
-        android:layout_above="@+id/bottom"
+        android:background="@color/light_read_color"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/head">
 
         <ListView
-            android:divider="#00000000"
-            android:dividerHeight="0dp"
             android:id="@+id/index_lv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:divider="#00000000"
+            android:dividerHeight="0dp">
 
         </ListView>
 
     </RelativeLayout>
 
-     <RelativeLayout
-         android:id="@+id/bottom"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+    <RelativeLayout
+        android:id="@+id/bottom"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true">
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
         <ImageView
             android:id="@+id/index_music_icon_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/icon_music"
-            />
-         <RelativeLayout
-             android:padding="12dp"
-             android:layout_toRightOf="@+id/index_music_icon_img"
-             android:layout_toLeftOf="@+id/index_music_play_cb"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
-             <TextView
-                 android:id="@+id/music_name_tv"
-                 android:layout_alignParentTop="true"
-                 android:textSize="15sp"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:text="歌曲的名称"
-                 />
-             <TextView
-                 android:id="@+id/music_user_tv"
-                 android:layout_alignParentBottom="true"
-                 android:textSize="13sp"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:text="歌曲的名称"
-                 />
-         </RelativeLayout>
+            android:src="@mipmap/icon_music" />
 
-        <CheckBox
-            android:button="@null"
-            android:layout_marginRight="24dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/index_music_list_img"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/index_music_play_cb"
+            android:layout_toRightOf="@+id/index_music_icon_img"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            >
+
+            <TextView
+                android:textColor="@color/light_text_color"
+                android:id="@+id/music_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:lines="1"
+                android:ellipsize="end"
+                android:text="歌曲的名称"
+                android:textSize="15sp" />
+
+            <TextView
+                android:lines="1"
+                android:ellipsize="end"
+                android:textColor="@color/light_text_color"
+                android:id="@+id/music_user_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="歌曲的名称"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <com.yzz.android.audiovideo.widget.YzzCheckBox
             android:id="@+id/index_music_play_cb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/play_drawable"
-            android:checked="false" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="24dp"
+            android:layout_toLeftOf="@+id/index_music_list_img"
+            yzz:select="@mipmap/icon_play_song"
+            yzz:unSelect="@mipmap/icon_pause" />
 
         <ImageView
-            android:layout_centerVertical="true"
             android:id="@+id/index_music_list_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/icon_list_song"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
-            />
+            android:layout_centerVertical="true"
+            android:src="@mipmap/icon_list_song" />
 
     </RelativeLayout>
 </RelativeLayout>
