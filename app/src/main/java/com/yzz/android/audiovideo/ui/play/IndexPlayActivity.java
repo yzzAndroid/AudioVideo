@@ -1,16 +1,13 @@
-package com.yzz.android.audiovideo.ui;
+package com.yzz.android.audiovideo.ui.play;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,7 +27,7 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndexActivity extends BaseActivity implements View.OnClickListener, YzzCheckBox.SelecterListener, IMusicChegeListener {
+public class IndexPlayActivity extends BaseActivity implements View.OnClickListener, YzzCheckBox.SelecterListener, IMusicChegeListener {
     @YzzAnnotation(id = R.id.index_music_play_cb)
     private YzzCheckBox player;
     @YzzAnnotation(id = R.id.index_lv)
@@ -57,8 +54,8 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void setContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_index);
-        YzzAnn<IndexActivity> yzzAnn = new YzzAnn<>();
+        setContentView(R.layout.activity_index_play);
+        YzzAnn<IndexPlayActivity> yzzAnn = new YzzAnn<>();
         yzzAnn.bind(this);
     }
 
@@ -147,7 +144,7 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener,
             home.addCategory(Intent.CATEGORY_HOME);
             startActivity(home);
             BaseApplication.getInstance().setNeedStartActivity(false);
-            return true;
+            return false;
         }
         return super.onKeyUp(keyCode, event);
     }
@@ -169,4 +166,8 @@ public class IndexActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
+    public void goMusicPlayInfo(View view) {
+        Intent intent = new Intent(this,PlayMusicActivity.class);
+        startActivity(intent);
+    }
 }
