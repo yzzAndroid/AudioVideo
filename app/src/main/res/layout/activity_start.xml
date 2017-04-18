@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/light_read_color"
     android:layout_height="match_parent"
-    tools:context=".ui.IndexActivity">
+    tools:context=".ui.play.IndexPlayActivity">
    <ImageView
-       android:background="@color/light_read_color"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:layout_centerHorizontal="true"
@@ -13,7 +13,6 @@
        android:src="@mipmap/icon_start"
        />
    <TextView
-       android:background="@color/light_read_color"
        android:textSize="14sp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"

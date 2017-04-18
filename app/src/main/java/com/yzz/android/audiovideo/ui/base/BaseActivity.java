@@ -1,6 +1,7 @@
 package com.yzz.android.audiovideo.ui.base;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     protected  void initStatus(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         View view = findViewById(android.R.id.content);
+        view.setBackgroundColor(Color.parseColor("#26282C"));
         view.setPadding(0,getStatusH(),0,0);
     }
 

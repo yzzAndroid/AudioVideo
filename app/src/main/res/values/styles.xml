@@ -1,13 +1,20 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/translate</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+       <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
     </style>
 
     <declare-styleable name="YzzCheckBox">
-        <attr name="select" format="reference"> </attr>
-        <attr name="unSelect" format="integer" ></attr>
+        <attr name="select" format="reference"></attr>
+        <attr name="unSelect" format="integer"></attr>
         <attr name="selected" format="reference"></attr>
     </declare-styleable>
 
+    <style name="Translucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

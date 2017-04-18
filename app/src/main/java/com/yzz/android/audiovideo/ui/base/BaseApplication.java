@@ -8,20 +8,16 @@ import android.app.Application;
  */
 public class BaseApplication extends Application{
 
-    private boolean isNeedStartActivity;
+    private boolean isNeedStartActivity = true;
 
-    private static BaseApplication application;
+    private static BaseApplication application = new BaseApplication();
 
     public BaseApplication() {
 
     }
 
     public static BaseApplication getInstance(){
-        if (application!=null){
-            return application;
-        }else {
-            return new BaseApplication();
-        }
+       return application;
     }
 
     public void setNeedStartActivity(boolean needStartActivity) {

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.IndexActivity">
+    android:background="@color/night_black_color"
+    tools:context=".ui.play.IndexPlayActivity">
 
     <LinearLayout
         android:id="@+id/head"
