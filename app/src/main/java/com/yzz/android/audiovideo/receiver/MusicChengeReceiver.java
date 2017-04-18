@@ -35,6 +35,7 @@ public class MusicChengeReceiver extends BroadcastReceiver {
             for (int i = 0; i < size; i++) {
                 if (referenceList.get(i) == null) continue;
                 IMusicChegeListener listener = (IMusicChegeListener) referenceList.get(i).get();
+
                 listener.change(position, name, author, time);
             }
         }

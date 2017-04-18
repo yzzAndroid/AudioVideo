@@ -13,12 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".server.MusicPlayServer" />
+        <receiver android:name=".server.MusicPlayServer$MusicInfoReceiver"/>
+            <!--<intent-filter>-->
+                <!--<action android:name="player"></action>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
-        <receiver android:name=".receiver.MusicChengeReceiver">
-            <intent-filter>
-                <action android:name="music_change"></action>
-            </intent-filter>
-        </receiver>
 
         <activity
             android:theme="@style/Translucent"
