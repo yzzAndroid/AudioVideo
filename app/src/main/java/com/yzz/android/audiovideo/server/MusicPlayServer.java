@@ -10,12 +10,14 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.yzz.android.audiovideo.bean.Musicer;
 import com.yzz.android.audiovideo.receiver.MusicChengeReceiver;
 import com.yzz.android.audiovideo.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,10 +40,8 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
     public static final String AUTHOR = "author";
     public static final String TIME = "time";
     private static int position = 0;
-    private static List<String> list;
-    public static String MuSIC_NAMES = "music_names";
+    private static List<Musicer> musicers;
     private Intent musicChange;
-    private List<String> musicNames;
 
     @Override
     public void onCreate() {
@@ -49,17 +49,15 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
-        list = new ArrayList<>();
+        musicers = new ArrayList<>();
         musicChange = new Intent();
         musicChange.setAction("music_change");
-        musicNames = new ArrayList<>();
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        list.addAll(intent.getExtras().getStringArrayList(MUSIC_LIST));
-        musicNames.addAll(intent.getExtras().getStringArrayList(MuSIC_NAMES));
+        musicers.addAll((List)intent.getParcelableArrayListExtra(MUSIC_LIST));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -78,11 +76,11 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
     public void onCompletion(MediaPlayer mp) {
         //TODO 下一曲
         try {
-            if (position > list.size() - 1) {
+            if (position > musicers.size() - 1) {
                 position = 0;
             }
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(list.get(position));
+            mediaPlayer.setDataSource(musicers.get(position).getPath());
             mediaPlayer.prepare();
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,9 +92,10 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
     public void onPrepared(MediaPlayer mp) {
         isNeedPrepar = false;
         mediaPlayer.start();
-        musicChange.putExtra(NAME,musicNames.get(position));
-        musicChange.putExtra(NAME,musicNames.get(position));
-        musicChange.putExtra(NAME,musicNames.get(position));
+        musicChange.putExtra(NAME,musicers.get(position).getMusictitle());
+        musicChange.putExtra(AUTHOR,musicers.get(position).getAuthor());
+        musicChange.putExtra(TIME,0L);
+        musicChange.putExtra(POSITION,position);
         sendBroadcast(musicChange);
         position++;
     }
@@ -108,10 +107,10 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
             String action = intent.getAction();
             try {
                 if (PLAY.equals(action)) {
-                    if (list == null || list.size() == 0) return;
+                    if (musicers == null || musicers.size() == 0) return;
                     if (isNeedPrepar) {
                         mediaPlayer.reset();
-                        mediaPlayer.setDataSource(list.get(position));
+                        mediaPlayer.setDataSource(musicers.get(position).getPath());
                         mediaPlayer.prepare();
                     } else {
                         if (!mediaPlayer.isPlaying())
@@ -124,7 +123,7 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
                 if (PLAY_MUSIC_BY_USER.equals(action)) {
                     position = intent.getIntExtra(POSITION, 0);
                     mediaPlayer.reset();
-                    mediaPlayer.setDataSource(list.get(position));
+                    mediaPlayer.setDataSource(musicers.get(position).getPath());
                     mediaPlayer.prepare();
                 }
             } catch (Exception e) {

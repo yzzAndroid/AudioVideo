@@ -1,18 +1,25 @@
 package com.yzz.android.audiovideo.ui.play;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yzz.android.audiovideo.R;
 import com.yzz.android.audiovideo.adapter.LoaclMusicListAdapter;
+import com.yzz.android.audiovideo.bean.Musicer;
+import com.yzz.android.audiovideo.config.Config;
 import com.yzz.android.audiovideo.receiver.IMusicChegeListener;
 import com.yzz.android.audiovideo.receiver.MusicChengeReceiver;
 import com.yzz.android.audiovideo.reflect.YzzAnn;
@@ -38,13 +45,12 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
     private TextView userNameTv;
     private Intent intent;
     private Intent intentReceiver;
-    private List<String> musics;
-    private List<String> musicNames;
+    private List<Musicer> musics;
     private LoaclMusicListAdapter adapter;
     private Intent userIntent;
-    private boolean isInitMusicComplete = false;
     private MusicChengeReceiver musicChengeReceiver;
     private SoftReference<IMusicChegeListener> iMusicChegeListener;
+    private String musicName;
 
 
     @Override
@@ -54,15 +60,15 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void setContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_index_play);
+        root = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_index_play,null);
+        setContentView(root);
         YzzAnn<IndexPlayActivity> yzzAnn = new YzzAnn<>();
         yzzAnn.bind(this);
     }
 
     public void startMusicServer() {
         intent = new Intent(this, MusicPlayServer.class);
-        intent.putStringArrayListExtra(MusicPlayServer.MUSIC_LIST, (ArrayList<String>) musics);
-        intent.putStringArrayListExtra(MusicPlayServer.MuSIC_NAMES, (ArrayList<String>) musicNames);
+        intent.putParcelableArrayListExtra(MusicPlayServer.MUSIC_LIST, (ArrayList<? extends Parcelable>) musics);
         startService(intent);
     }
 
@@ -71,17 +77,16 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
         userIntent = new Intent(this, MusicPlayServer.MusicInfoReceiver.class);
         intentReceiver = new Intent(this, MusicPlayServer.MusicInfoReceiver.class);
         adapter = new LoaclMusicListAdapter(this);
-        musicNames = new ArrayList<>();
         musics = new ArrayList<>();
         musicList.setAdapter(adapter);
-        adapter.setMusics(musicNames);
+        adapter.setMusics(musics);
         player.setSelectListener(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FileUtils.getAllMusic(musics, musicNames);
-                isInitMusicComplete = true;
+                FileUtils.getAllMusic(musics);
                 startMusicServer();
+
                 musicList.post(new Runnable() {
                     @Override
                     public void run() {
@@ -99,7 +104,7 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
                 userIntent.setAction(MusicPlayServer.PLAY_MUSIC_BY_USER);
                 userIntent.putExtra(MusicPlayServer.POSITION, position);
                 player.setSelect(true);
-                musicNameTv.setText(musicNames.get(position));
+                musicNameTv.setText(musics.get(position).getMusictitle());
                 sendBroadcast(userIntent);
             }
         });
@@ -112,8 +117,8 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initBottom() {
-        if (musicNames.size() > 0)
-            musicNameTv.setText(musicNames.get(0));
+        if (musics.size() > 0)
+            musicNameTv.setText(musics.get(0).getMusictitle());
     }
 
     @Override
@@ -161,13 +166,18 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void change(int position, String name, String author, long time) {
-        if (!TextUtils.isEmpty(name))
-            musicNameTv.setText(name);
+        musicName = name;
+        if (!TextUtils.isEmpty(name)) {
+            musicNameTv.setText(""+name);
+            userNameTv.setText(""+author);
+        }
     }
 
 
     public void goMusicPlayInfo(View view) {
-        Intent intent = new Intent(this,PlayMusicActivity.class);
+        Intent intent = new Intent(this, PlayMusicActivity.class);
+        intent.putExtra(Config.MUSIC_TITLE,musicName);
+        intent.putParcelableArrayListExtra(Config.MUSIC_LIST, (ArrayList<? extends Parcelable>) musics);
         startActivity(intent);
     }
 }

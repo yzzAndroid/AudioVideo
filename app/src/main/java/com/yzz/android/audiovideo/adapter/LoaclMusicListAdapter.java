@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yzz.android.audiovideo.R;
+import com.yzz.android.audiovideo.bean.Musicer;
 import com.yzz.android.audiovideo.reflect.YzzAnn;
 import com.yzz.android.audiovideo.reflect.YzzAnnotation;
 
@@ -17,17 +18,17 @@ import java.util.List;
  * 2017/4/16 0016.
  */
 public class LoaclMusicListAdapter extends ABaseAdapter<LoaclMusicListAdapter.Holder> {
-    private List<String> musics;
+    private List<Musicer> musics;
     private Context context;
 
     public LoaclMusicListAdapter(Context context) {
         this.context = context;
     }
 
-    public void setMusics(List<String> musics) {
+
+    public void setMusics(List<Musicer> musics) {
         this.musics = musics;
     }
-
 
     @Override
     protected View initContentView() {
@@ -37,7 +38,8 @@ public class LoaclMusicListAdapter extends ABaseAdapter<LoaclMusicListAdapter.Ho
 
     @Override
     protected void bindData(Holder holder,int position) {
-        holder.nameTv.setText(musics.get(position));
+        holder.nameTv.setText(musics.get(position).getMusictitle());
+        holder.userTv.setText(musics.get(position).getAuthor());
     }
 
     @Override

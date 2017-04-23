@@ -34,7 +34,6 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:background="@color/light_read_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom"
@@ -44,8 +43,7 @@
             android:id="@+id/index_lv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="#00000000"
-            android:dividerHeight="0dp">
+            >
 
         </ListView>
 

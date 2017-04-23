@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.yzz.android.audiovideo.R;
@@ -16,7 +17,10 @@ import com.yzz.android.audiovideo.reflect.YzzAnn;
  * 2017/4/15 0015.
  */
 public abstract class BaseActivity extends AppCompatActivity{
-    protected static int statusColor = Color.parseColor("#c62F2F");
+    protected  int statusColor = Color.parseColor("#c62F2F");
+    protected ViewGroup root;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,11 +30,11 @@ public abstract class BaseActivity extends AppCompatActivity{
         bindData();
     }
 
+
+
     protected  void initStatus(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        View view = findViewById(android.R.id.content);
-        view.setBackgroundColor(Color.parseColor("#26282C"));
-        view.setPadding(0,getStatusH(),0,0);
+        root.setPadding(0,getStatusH(),0,0);
     }
 
     /**
