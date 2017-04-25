@@ -120,6 +120,7 @@ public final class DbHelper<T> {
             database.execSQL(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 
