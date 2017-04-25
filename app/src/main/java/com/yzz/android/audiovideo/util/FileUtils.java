@@ -3,15 +3,12 @@ package com.yzz.android.audiovideo.util;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.VideoView;
 
 import com.yzz.android.audiovideo.bean.Musicer;
+import com.yzz.android.audiovideo.db.DbHelper;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

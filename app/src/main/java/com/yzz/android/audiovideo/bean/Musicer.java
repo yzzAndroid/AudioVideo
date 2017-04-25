@@ -3,25 +3,39 @@ package com.yzz.android.audiovideo.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.yzz.android.audiovideo.reflect.DbAnn;
+import com.yzz.android.audiovideo.reflect.DbType;
+
 import java.io.Serializable;
 
 /**
  * Created by yzz
  * 2017/4/22 0022.
  */
+@DbAnn(tableName = "yzz_music")
 public class Musicer implements Parcelable {
-    private String id;
-    private String path;
-    private String musictitle;
-    private String author = "未知";
-    private String album = "未知";
-    private String year = "未知";
-    private String memo = "未知";
-    private String retain = "未知";
-    private String track = "未知";
-    private String type = "未知";
+    @DbAnn(isKey = true, isAutoincrement = true, type = DbType.INTEGER)
+    public int id;
+    @DbAnn(type = DbType.VARCHAR, length = 35)
+    public String path;
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String musictitle;
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String author = "未知";
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String album = "未知";
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String year = "未知";
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String memo = "未知";
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String retain = "未知";
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String track = "未知";
+    @DbAnn(type = DbType.VARCHAR, length = 20)
+    public String type = "未知";
 
-    public Musicer(String id, String path, String musictitle, String author, String album, String year, String memo, String retain, String track, String type) {
+    public Musicer(int id, String path, String musictitle, String author, String album, String year, String memo, String retain, String track, String type) {
         this.id = id;
         this.path = path;
         this.musictitle = musictitle;
@@ -34,7 +48,7 @@ public class Musicer implements Parcelable {
         this.type = type;
     }
 
-    public Musicer(String id, String musictitle, String author, String album, String year, String memo, String retain, String track, String type) {
+    public Musicer(int id, String musictitle, String author, String album, String year, String memo, String retain, String track, String type) {
         this.id = id;
         this.musictitle = musictitle;
         this.author = author;
@@ -61,7 +75,7 @@ public class Musicer implements Parcelable {
     }
 
     protected Musicer(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         path = in.readString();
         musictitle = in.readString();
         author = in.readString();
@@ -77,7 +91,7 @@ public class Musicer implements Parcelable {
         @Override
         public Musicer createFromParcel(Parcel in) {
             Musicer musicer = new Musicer();
-            String id = in.readString();
+            int id = in.readInt();
             String path = in.readString();
             String musictitle = in.readString();
             String author = in.readString();
@@ -96,11 +110,11 @@ public class Musicer implements Parcelable {
         }
     };
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -183,7 +197,7 @@ public class Musicer implements Parcelable {
 
         Musicer musicer = (Musicer) o;
 
-        if (id != null ? !id.equals(musicer.id) : musicer.id != null) return false;
+        if (id != musicer.id) return false;
         if (path != null ? !path.equals(musicer.path) : musicer.path != null) return false;
         if (musictitle != null ? !musictitle.equals(musicer.musictitle) : musicer.musictitle != null)
             return false;
@@ -199,7 +213,7 @@ public class Musicer implements Parcelable {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = id;
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (musictitle != null ? musictitle.hashCode() : 0);
         result = 31 * result + (author != null ? author.hashCode() : 0);
@@ -215,7 +229,7 @@ public class Musicer implements Parcelable {
     @Override
     public String toString() {
         return "Musicer{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", path='" + path + '\'' +
                 ", musictitle='" + musictitle + '\'' +
                 ", author='" + author + '\'' +
@@ -235,7 +249,7 @@ public class Musicer implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(path);
         dest.writeString(musictitle);
         dest.writeString(author);

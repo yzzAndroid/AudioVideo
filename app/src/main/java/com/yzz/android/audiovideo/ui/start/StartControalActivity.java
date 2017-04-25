@@ -26,7 +26,6 @@ public class StartControalActivity extends AppCompatActivity {
         }else {
             startActivity(new Intent(this,IndexPlayActivity.class));
         }
-
         finish();
     }
 }

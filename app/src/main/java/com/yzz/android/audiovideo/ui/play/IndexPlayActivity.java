@@ -3,6 +3,7 @@ package com.yzz.android.audiovideo.ui.play;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.yzz.android.audiovideo.R;
 import com.yzz.android.audiovideo.adapter.LoaclMusicListAdapter;
 import com.yzz.android.audiovideo.bean.Musicer;
 import com.yzz.android.audiovideo.config.Config;
+import com.yzz.android.audiovideo.db.DbHelper;
 import com.yzz.android.audiovideo.receiver.IMusicChegeListener;
 import com.yzz.android.audiovideo.receiver.MusicChengeReceiver;
 import com.yzz.android.audiovideo.reflect.YzzAnn;
@@ -51,19 +53,37 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
     private MusicChengeReceiver musicChengeReceiver;
     private SoftReference<IMusicChegeListener> iMusicChegeListener;
     private String musicName;
+    private DbHelper<Musicer> dbHelper;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
+
     }
 
     @Override
     public void setContentView(Bundle savedInstanceState) {
-        root = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_index_play,null);
+        root = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_index_play, null);
         setContentView(root);
         YzzAnn<IndexPlayActivity> yzzAnn = new YzzAnn<>();
         yzzAnn.bind(this);
+        dbHelper = new DbHelper<>(this, new Musicer(), "yzz");
+        Cursor c = dbHelper.select();
+        if (c == null) return;
+        while (c.moveToNext()) {
+            Musicer m = new Musicer();
+            m.setPath(c.getString(c.getColumnIndex("path")));
+            m.setMusictitle(c.getString(c.getColumnIndex("musictitle")));
+            m.setAuthor(c.getString(c.getColumnIndex("author")));
+            m.setAlbum(c.getString(c.getColumnIndex("album")));
+            m.setYear(c.getString(c.getColumnIndex("year")));
+            m.setMemo(c.getString(c.getColumnIndex("memo")));
+            m.setRetain(c.getString(c.getColumnIndex("retain")));
+            m.setTrack(c.getString(c.getColumnIndex("track")));
+            m.setType(c.getString(c.getColumnIndex("type")));
+            musics.add(m);
+        }
     }
 
     public void startMusicServer() {
@@ -81,23 +101,33 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
         musicList.setAdapter(adapter);
         adapter.setMusics(musics);
         player.setSelectListener(this);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FileUtils.getAllMusic(musics);
-                startMusicServer();
-
-                musicList.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        //这里是要初始化listVIew
-                        adapter.notifyDataSetChanged();
-                        initBottom();
-
+        if (musics.size() <= 0) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileUtils.getAllMusic(musics);
+                    startMusicServer();
+                    int size = musics.size();
+                    for (int i = 0; i < size; i++) {
+                        dbHelper.insert(musics.get(i));
                     }
-                });
-            }
-        }).start();
+                    musicList.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //这里是要初始化listVIew
+                            adapter.notifyDataSetChanged();
+                            initBottom();
+
+                        }
+                    });
+                }
+            }).start();
+        } else {
+            //这里是要初始化listVIew
+            adapter.notifyDataSetChanged();
+            startMusicServer();
+            initBottom();
+        }
         musicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -168,15 +198,15 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
     public void change(int position, String name, String author, long time) {
         musicName = name;
         if (!TextUtils.isEmpty(name)) {
-            musicNameTv.setText(""+name);
-            userNameTv.setText(""+author);
+            musicNameTv.setText("" + name);
+            userNameTv.setText("" + author);
         }
     }
 
 
     public void goMusicPlayInfo(View view) {
         Intent intent = new Intent(this, PlayMusicActivity.class);
-        intent.putExtra(Config.MUSIC_TITLE,musicName);
+        intent.putExtra(Config.MUSIC_TITLE, musicName);
         intent.putParcelableArrayListExtra(Config.MUSIC_LIST, (ArrayList<? extends Parcelable>) musics);
         startActivity(intent);
     }
