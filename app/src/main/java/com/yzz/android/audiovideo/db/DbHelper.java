@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 public final class DbHelper<T> {
     private String dbName;
     private String tableName;
-    private boolean isAutoincremen = false;
     private SoftReference<Context> contextSoftReference;
     private T t;
     private Class<? extends T> tClass;
@@ -50,9 +49,6 @@ public final class DbHelper<T> {
                 Field f = fields[i];
                 DbAnn dbAnn = f.getAnnotation(DbAnn.class);
                 if (dbAnn == null) continue;
-                if (dbAnn.isAutoincrement()) {
-                    isAutoincremen = dbAnn.isAutoincrement();
-                }
                 break;
             }
             dbName = dbName == null ? "yzz" : dbName;
@@ -100,16 +96,17 @@ public final class DbHelper<T> {
             for (int i = 0; i < size; i++) {
                 Field f = fields[i];
                 if (f.getAnnotation(DbAnn.class) == null) continue;
-                if (f.getAnnotation(DbAnn.class).isKey())continue;
+                if (f.getAnnotation(DbAnn.class).isKey()) continue;
                 sb1.append(f.getName()).append(" , ");
+
                 Object oob = f.get(t);
                 if (oob == null) continue;
                 if (oob.getClass().equals(int.class)) {
                     sb2.append(oob);
                 } else {
-                    sb2.append("'" + oob + "'");
+                    String str = oob.toString().replaceAll("\"","");
+                    sb2.append("\"" + str + "\"").append(" , ");
                 }
-                sb.append(" , ");
             }
             sb.append(sb1.substring(0, sb1.length() - 2));
             sb.append(" ) ")

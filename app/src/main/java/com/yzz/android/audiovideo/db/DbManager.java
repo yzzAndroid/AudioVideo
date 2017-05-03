@@ -21,5 +21,6 @@ public class DbManager extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //更新
+
     }
 }

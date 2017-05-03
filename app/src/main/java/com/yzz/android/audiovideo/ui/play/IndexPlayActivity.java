@@ -68,6 +68,7 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
         setContentView(root);
         YzzAnn<IndexPlayActivity> yzzAnn = new YzzAnn<>();
         yzzAnn.bind(this);
+        musics = new ArrayList<>();
         dbHelper = new DbHelper<>(this, new Musicer(), "yzz");
         Cursor c = dbHelper.select();
         if (c == null) return;
@@ -97,7 +98,6 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
         userIntent = new Intent(this, MusicPlayServer.MusicInfoReceiver.class);
         intentReceiver = new Intent(this, MusicPlayServer.MusicInfoReceiver.class);
         adapter = new LoaclMusicListAdapter(this);
-        musics = new ArrayList<>();
         musicList.setAdapter(adapter);
         adapter.setMusics(musics);
         player.setSelectListener(this);
