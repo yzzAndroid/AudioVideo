@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:yzz="http://schemas.android.com/apk/res-auto"
     android:background="@mipmap/timg"
     android:orientation="vertical">
 
@@ -34,6 +35,38 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/music_play_vp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+        android:layout_height="400dp">
+    </android.support.v4.view.ViewPager>
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:onClick="last"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/icon_last_song"
+            />
+        <com.yzz.android.audiovideo.widget.YzzCheckBox
+            android:id="@+id/play_pause"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            yzz:select="@mipmap/icon_play_song"
+            yzz:unSelect="@mipmap/icon_pause" />
+
+        <ImageView
+            android:onClick="next"
+            android:layout_alignParentRight="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/icon_next_song"
+            />
+    </RelativeLayout>
 </LinearLayout>

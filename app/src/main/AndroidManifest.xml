@@ -13,35 +13,32 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".server.MusicPlayServer" />
-        <receiver android:name=".server.MusicPlayServer$MusicInfoReceiver"/>
-            <!--<intent-filter>-->
-                <!--<action android:name="player"></action>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
 
+        <receiver android:name=".server.MusicPlayServer$MusicInfoReceiver" />
+        <!-- <intent-filter> -->
+        <!-- <action android:name="player"></action> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
         <activity
-            android:theme="@style/Translucent"
             android:name=".ui.start.StartActivity"
-            android:launchMode="singleInstance">
-
-        </activity>
+            android:launchMode="singleInstance"
+            android:theme="@style/Translucent"></activity>
         <activity
             android:name=".ui.play.IndexPlayActivity"
             android:launchMode="singleInstance" />
         <activity
             android:name=".ui.start.StartControalActivity"
             android:launchMode="singleInstance"
-            android:theme="@style/Translucent"
-            >
+            android:theme="@style/Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.play.PlayMusicActivity"></activity>
+        <activity android:name=".ui.play.PlayMusicActivity" />
+        <activity android:name=".ui.play.VideoActivity"></activity>
     </application>
 
 </manifest>

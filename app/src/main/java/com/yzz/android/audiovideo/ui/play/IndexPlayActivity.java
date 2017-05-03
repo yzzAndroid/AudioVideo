@@ -54,6 +54,7 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
     private SoftReference<IMusicChegeListener> iMusicChegeListener;
     private String musicName;
     private DbHelper<Musicer> dbHelper;
+    private int currentPosition = 0;
 
 
     @Override
@@ -147,8 +148,10 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initBottom() {
-        if (musics.size() > 0)
-            musicNameTv.setText(musics.get(0).getMusictitle());
+        if (musics.size() > 0) {
+            musicName = musics.get(0).getMusictitle();
+            musicNameTv.setText(musicName);
+        }
     }
 
     @Override
@@ -200,6 +203,8 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
         if (!TextUtils.isEmpty(name)) {
             musicNameTv.setText("" + name);
             userNameTv.setText("" + author);
+            player.setSelect(true);
+            currentPosition = position;
         }
     }
 
@@ -208,6 +213,8 @@ public class IndexPlayActivity extends BaseActivity implements View.OnClickListe
         Intent intent = new Intent(this, PlayMusicActivity.class);
         intent.putExtra(Config.MUSIC_TITLE, musicName);
         intent.putParcelableArrayListExtra(Config.MUSIC_LIST, (ArrayList<? extends Parcelable>) musics);
+        intent.putExtra(MusicPlayServer.POSITION, currentPosition);
+        intent.putExtra(MusicPlayServer.PLAYING,player.isSelect());
         startActivity(intent);
     }
 }

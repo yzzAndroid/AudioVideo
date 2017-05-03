@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.yzz.android.audiovideo.R;
 import com.yzz.android.audiovideo.bean.Musicer;
+import com.yzz.android.audiovideo.widget.YzzCheckBox;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class MusicPlayerAdapter extends PagerAdapter {
     public void setMusicers(List<Musicer> musicers) {
         this.musicers = musicers;
     }
+
 
     @Override
     public int getCount() {

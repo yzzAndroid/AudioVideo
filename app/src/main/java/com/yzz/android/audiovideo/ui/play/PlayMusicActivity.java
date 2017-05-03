@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.yzz.android.audiovideo.reflect.YzzAnn;
 import com.yzz.android.audiovideo.reflect.YzzAnnotation;
 import com.yzz.android.audiovideo.server.MusicPlayServer;
 import com.yzz.android.audiovideo.ui.base.BaseActivity;
+import com.yzz.android.audiovideo.widget.YzzCheckBox;
 
 import java.lang.ref.SoftReference;
 import java.util.List;
@@ -30,21 +32,26 @@ import java.util.List;
  *
  * @author yzz
  */
-public class PlayMusicActivity extends BaseActivity implements IMusicChegeListener {
+public class PlayMusicActivity extends BaseActivity implements IMusicChegeListener, YzzCheckBox.SelecterListener {
     @YzzAnnotation(id = R.id.music_title_tv)
     private TextView titleTv;
     @YzzAnnotation(id = R.id.music_play_vp)
     private ViewPager vp;
+    @YzzAnnotation(id = R.id.play_pause)
+    private YzzCheckBox checkBox;
     private List<Musicer> musicers;
     private String musicName;
     private MusicChengeReceiver musicChengeReceiver;
     private SoftReference<IMusicChegeListener> iMusicChegeListener;
     private Intent intentReceiver;
     private MusicPlayerAdapter playerAdapter;
+    private int position = 0;
+    private Intent userIntent;
+    private boolean isSelect;
 
     @Override
     public void setContentView(Bundle savedInstanceState) {
-        root = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_play_music,null);
+        root = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_play_music, null);
         setContentView(root);
         YzzAnn<PlayMusicActivity> yzzAnn = new YzzAnn<>();
         yzzAnn.bind(this);
@@ -56,10 +63,11 @@ public class PlayMusicActivity extends BaseActivity implements IMusicChegeListen
         Intent intent = getIntent();
         musicName = intent.getStringExtra(Config.MUSIC_TITLE);
         musicers = intent.getParcelableArrayListExtra(Config.MUSIC_LIST);
-        titleTv.setText(TextUtils.isEmpty(musicName)?"初始化中":musicName);
+        titleTv.setText(TextUtils.isEmpty(musicName) ? "初始化中" : musicName);
         playerAdapter = new MusicPlayerAdapter(this);
         playerAdapter.setMusicers(musicers);
         vp.setAdapter(playerAdapter);
+        vp.setCurrentItem(intent.getIntExtra(MusicPlayServer.POSITION, 0));
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -78,6 +86,7 @@ public class PlayMusicActivity extends BaseActivity implements IMusicChegeListen
 
             }
         });
+        checkBox.setSelectListener(this);
         bindReceiver();
     }
 
@@ -88,6 +97,7 @@ public class PlayMusicActivity extends BaseActivity implements IMusicChegeListen
         musicChengeReceiver.setMusicChangeListener(iMusicChegeListener);
         registerReceiver(musicChengeReceiver, filter);
         intentReceiver = new Intent(this, MusicPlayServer.MusicInfoReceiver.class);
+        userIntent = new Intent(this, MusicPlayServer.MusicInfoReceiver.class);
     }
 
     @Override
@@ -103,11 +113,47 @@ public class PlayMusicActivity extends BaseActivity implements IMusicChegeListen
     public void change(int position, String name, String author, long time) {
         titleTv.setText(name);
         vp.setCurrentItem(position);
+        this.position = position;
+        checkBox.setSelect(true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(musicChengeReceiver);
+    }
+
+    public void last(View view) {
+        userIntent.setAction(MusicPlayServer.PLAY_MUSIC_BY_USER);
+        int p;
+        if (position == 0) {
+            p = musicers.size() - 1;
+        } else {
+            p = position-1;
+        }
+        userIntent.putExtra(MusicPlayServer.POSITION, p);
+        sendBroadcast(userIntent);
+    }
+
+    public void next(View view) {
+        userIntent.setAction(MusicPlayServer.PLAY_MUSIC_BY_USER);
+        int p;
+        if (position == musicers.size() - 1) {
+            p = 0;
+        } else {
+            p = position+1;
+        }
+        userIntent.putExtra(MusicPlayServer.POSITION, p);
+        sendBroadcast(userIntent);
+    }
+
+    @Override
+    public void clickListener(boolean isSelect) {
+        if (isSelect) {
+            intentReceiver.setAction(MusicPlayServer.PLAY);
+        } else {
+            intentReceiver.setAction(MusicPlayServer.PAUSE);
+        }
+        sendBroadcast(intentReceiver);
     }
 }

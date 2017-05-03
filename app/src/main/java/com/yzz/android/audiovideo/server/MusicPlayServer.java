@@ -39,9 +39,10 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
     public static final String NAME = "name";
     public static final String AUTHOR = "author";
     public static final String TIME = "time";
+    public static final String PLAYING = "playing";
     private static int position = 0;
     private static List<Musicer> musicers;
-    private Intent musicChange;
+    private  Intent musicChange;
 
     @Override
     public void onCreate() {
@@ -96,11 +97,13 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
         musicChange.putExtra(AUTHOR,musicers.get(position).getAuthor());
         musicChange.putExtra(TIME,0L);
         musicChange.putExtra(POSITION,position);
+        musicChange.putExtra(PLAYING,true);
         sendBroadcast(musicChange);
         position++;
     }
 
     public static class MusicInfoReceiver extends BroadcastReceiver {
+
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -119,6 +122,8 @@ public class MusicPlayServer extends Service implements MediaPlayer.OnCompletion
                 }
                 if (PAUSE.equals(action)) {
                     mediaPlayer.pause();
+                    //musicChange.putExtra(PLAYING,true);
+                    //sendBroadcast(musicChange);
                 }
                 if (PLAY_MUSIC_BY_USER.equals(action)) {
                     position = intent.getIntExtra(POSITION, 0);
