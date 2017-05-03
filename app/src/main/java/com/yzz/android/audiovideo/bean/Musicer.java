@@ -19,7 +19,7 @@ public class Musicer implements Parcelable {
     @DbAnn(type = DbType.VARCHAR, length = 35)
     public String path;
     @DbAnn(type = DbType.VARCHAR, length = 20)
-    public String musictitle;
+    public String musictitle = "未知";
     @DbAnn(type = DbType.VARCHAR, length = 20)
     public String author = "未知";
     @DbAnn(type = DbType.VARCHAR, length = 20)

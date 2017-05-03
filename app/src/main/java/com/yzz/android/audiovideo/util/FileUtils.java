@@ -2,6 +2,7 @@ package com.yzz.android.audiovideo.util;
 
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.yzz.android.audiovideo.bean.Musicer;
@@ -129,17 +130,19 @@ public class FileUtils {
             String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
             String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
             String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            String year = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_YEAR);
             String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION); // 播放时长单位为毫秒
+            String type = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
             byte[] pic = mmr.getEmbeddedPicture();  // 图片，可以通过BitmapFactory.decodeByteArray转换为bitmap图
 
-            musicer.setMusictitle(title);
-            musicer.setAuthor(artist);
-            musicer.setAlbum(album);
-//            musicer.setYear(year);
+            musicer.setMusictitle(TextUtils.isEmpty(title)?"未知":title);
+            musicer.setAuthor(TextUtils.isEmpty(artist)?"未知":artist);
+            musicer.setAlbum(TextUtils.isEmpty(album)?"未知":album);
+            musicer.setYear(TextUtils.isEmpty(year)?"未知":year);
 //            musicer.setMemo(memo);
 //            musicer.setRetain(retain);
 //            musicer.setTrack(track);
-//            musicer.setType(type);
+            musicer.setType(TextUtils.isEmpty(type)?"未知":type);
             musicerList.add(musicer);
         }
         catch (Exception e)
